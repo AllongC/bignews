@@ -13,16 +13,18 @@ $(function () {
                     }
                 })
                 if (!flag) {
-                    alert('输入不能为空，请重新输入...')
+                    $('.modal').modal('show');
+                    $('.modal-body>p').text('输入不能为空，请重新输入...')
                     return;
                 }
             },
             success: function (res) {
+                $('.modal').modal('show');
+                $('.modal-body>p').text(res.msg)
                 if (res.code == 200) {
-                    alert('登录成功...');
-                    location.href = './index.html'
-                } else {
-                    alert('账户或密码输入有误，请重新输入...')
+                    $('.modal').on('hidden.bs.modal', function (e) {
+                        location.href = './index.html'
+                    })
                 }
             }
         })
