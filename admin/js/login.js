@@ -1,29 +1,28 @@
 $(function () {
-    $('.input_sub').on('click', function (e) {
-        //阻止默认行为
+    $('.login_form').on('submit', function (e) {
         e.preventDefault();
-        //验证输入是否为空
-        var username = $('.input_txt').val();
-        var password = $('.input_pass').val();
-        if ($.trim(username) == '' || $.trim(password) == '') {
-            alert('输入不能为空,请重新输入...');
-            return;
-        }
-        //向服务器请求
         $.ajax({
             type: 'post',
             url: 'http://localhost:8080/api/v1/admin/user/login',
-            data: {
-                username: username,
-                password: password,
+            data: $(this).serialize(),
+            beforeSend: function () {
+                var flag = true;
+                $('.login_form input[name]').each(function (index, ele) {
+                    if ($.trim($(ele).val()) == '') {
+                        flag = false;
+                    }
+                })
+                if (!flag) {
+                    alert('输入不能为空，请重新输入...')
+                    return;
+                }
             },
             success: function (res) {
-                // console.log(res);
                 if (res.code == 200) {
-                    alert(res.msg);
+                    alert('登录成功...');
                     location.href = './index.html'
                 } else {
-                    alert(res.msg)
+                    alert('账户或密码输入有误，请重新输入...')
                 }
             }
         })
